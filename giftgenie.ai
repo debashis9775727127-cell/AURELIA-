@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GiftGenie AI — US Niche AI-Powered Gifting Concierge</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #faf9f6;
+      color: #1e1b18;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #fff5f5 0%, #fef3c7 50%, #f3e8ff 100%);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(229, 231, 235, 0.8);
+    }
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #e11d48;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center font-extrabold text-lg shadow-sm">
+          G
+        </div>
+        <div>
+          <span class="font-extrabold text-xl tracking-tight text-stone-900">GiftGenie<span class="text-rose-600">.ai</span></span>
+          <span class="hidden sm:inline-block ml-2 text-[11px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">US Gifting Concierge</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-stone-600">
+        <a href="#finder" class="hover:text-rose-600 transition">AI Gift Finder</a>
+        <a href="#occasions" class="hover:text-rose-600 transition">US Holidays</a>
+        <a href="#how-it-works" class="hover:text-rose-600 transition">How It Works</a>
+      </nav>
+
+      <button onclick="scrollToFinder()" class="bg-stone-900 hover:bg-stone-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition shadow-sm">
+        Find a Gift
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="gradient-bg py-12 sm:py-16 border-b border-stone-200/70">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="inline-flex items-center gap-2 bg-white/80 border border-rose-200 text-rose-700 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-5 shadow-sm">
+        <span>✨ Built for Christmas, Mother's Day, Valentine's & Thanksgiving</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-stone-900 tracking-tight leading-tight mb-4">
+        Stop Guessing. Find the <span class="text-rose-600">Perfect Personalized Gift</span> in Seconds.
+      </h1>
+      <p class="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto mb-8">
+        Tell our AI about their age, hobbies, relationship, and occasion. We instantly curate unique & handmade gift ideas linked directly to <strong>Etsy</strong> and <strong>Amazon US</strong>.
+      </p>
+
+      <!-- Quick Occasion Pills -->
+      <div id="occasions" class="flex flex-wrap justify-center gap-2">
+        <button onclick="setQuickOccasion('Christmas')" class="occasion-pill bg-white hover:bg-rose-50 border border-stone-200 text-stone-700 text-xs sm:text-sm font-medium px-3.5 py-1.5 rounded-full transition shadow-sm">🎄 Christmas</button>
+        <button onclick="setQuickOccasion('Mother\'s Day')" class="occasion-pill bg-white hover:bg-rose-50 border border-stone-200 text-stone-700 text-xs sm:text-sm font-medium px-3.5 py-1.5 rounded-full transition shadow-sm">💐 Mother's Day</button>
+        <button onclick="setQuickOccasion('Valentine\'s Day')" class="occasion-pill bg-white hover:bg-rose-50 border border-stone-200 text-stone-700 text-xs sm:text-sm font-medium px-3.5 py-1.5 rounded-full transition shadow-sm">💝 Valentine's Day</button>
+        <button onclick="setQuickOccasion('Thanksgiving')" class="occasion-pill bg-white hover:bg-rose-50 border border-stone-200 text-stone-700 text-xs sm:text-sm font-medium px-3.5 py-1.5 rounded-full transition shadow-sm">🦃 Thanksgiving Host</button>
+        <button onclick="setQuickOccasion('Birthday')" class="occasion-pill bg-white hover:bg-rose-50 border border-stone-200 text-stone-700 text-xs sm:text-sm font-medium px-3.5 py-1.5 rounded-full transition shadow-sm">🎂 Birthday</button>
+        <button onclick="setQuickOccasion('Anniversary')" class="occasion-pill bg-white hover:bg-rose-50 border border-stone-200 text-stone-700 text-xs sm:text-sm font-medium px-3.5 py-1.5 rounded-full transition shadow-sm">💍 Anniversary</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main AI Concierge Tool -->
+  <main id="finder" class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- Left Form Panel -->
+      <div class="lg:col-span-5 glass-card rounded-2xl p-6 shadow-md">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-bold text-stone-900">Tell Us About the Recipient</h2>
+          <span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">AI Ready</span>
+        </div>
+
+        <form id="giftForm" class="space-y-4">
+          <!-- Relationship -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">Who is this gift for?</label>
+            <select id="relationship" class="w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm font-medium text-stone-800 focus:outline-none focus:ring-2 focus:ring-rose-500">
+              <option value="Wife / Girlfriend">Wife / Girlfriend</option>
+              <option value="Husband / Boyfriend">Husband / Boyfriend</option>
+              <option value="Mom">Mom</option>
+              <option value="Dad">Dad</option>
+              <option value="Best Friend">Best Friend</option>
+              <option value="Coworker / Host">Coworker / Dinner Host</option>
+              <option value="Teen / Kid">Teen / Kid</option>
+            </select>
+          </div>
+
+          <!-- Age & Occasion -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">Age Group</label>
+              <select id="age" class="w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm font-medium text-stone-800 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                <option value="20s">20s (Young Adult)</option>
+                <option value="30s" selected>30s</option>
+                <option value="40s-50s">40s – 50s</option>
+                <option value="60+">60+ (Senior)</option>
+                <option value="Teens">Teens (13–19)</option>
+                <option value="Kids">Kids (5–12)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">Occasion</label>
+              <select id="occasion" class="w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm font-medium text-stone-800 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                <option value="Christmas">Christmas</option>
+                <option value="Mother's Day">Mother's Day</option>
+                <option value="Valentine's Day">Valentine's Day</option>
+                <option value="Thanksgiving">Thanksgiving</option>
+                <option value="Birthday">Birthday</option>
+                <option value="Anniversary">Anniversary</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Hobbies & Interests -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">Hobbies, Passions & Vibes</label>
+            <input type="text" id="interests" placeholder="e.g., coffee lover, gardening, baking, retro gaming, dogs..."
+              class="w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-rose-500" required />
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <button type="button" onclick="addInterest('Coffee & Tea')" class="text-[11px] bg-stone-100 hover:bg-stone-200 text-stone-700 px-2 py-1 rounded-md">+ Coffee</button>
+              <button type="button" onclick="addInterest('Home Cooking & Baking')" class="text-[11px] bg-stone-100 hover:bg-stone-200 text-stone-700 px-2 py-1 rounded-md">+ Cooking</button>
+              <button type="button" onclick="addInterest('Gardening & Plants')" class="text-[11px] bg-stone-100 hover:bg-stone-200 text-stone-700 px-2 py-1 rounded-md">+ Plants</button>
+              <button type="button" onclick="addInterest('Book Lover')" class="text-[11px] bg-stone-100 hover:bg-stone-200 text-stone-700 px-2 py-1 rounded-md">+ Reading</button>
+              <button type="button" onclick="addInterest('Dog / Pet Parent')" class="text-[11px] bg-stone-100 hover:bg-stone-200 text-stone-700 px-2 py-1 rounded-md">+ Pets</button>
+            </div>
+          </div>
+
+          <!-- Budget & Style -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">Budget (USD)</label>
+              <select id="budget" class="w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm font-medium text-stone-800 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                <option value="Under $30">Under $30</option>
+                <option value="$30 - $75" selected>$30 – $75</option>
+                <option value="$75 - $150">$75 – $150</option>
+                <option value="$150+ Luxury">$150+ Luxury</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">Gift Style</label>
+              <select id="style" class="w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm font-medium text-stone-800 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                <option value="Handmade & Personalized">Handmade / Custom</option>
+                <option value="Practical & Everyday">Practical & Useful</option>
+                <option value="Sentimental & Emotional">Sentimental</option>
+                <option value="Fun & Quirky">Fun & Quirky</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn"
+            class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 text-sm mt-2">
+            <span>✨ Generate Personalized Gift Ideas</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Right Results Panel -->
+      <div class="lg:col-span-7">
+        <!-- Results Header -->
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div>
+            <h3 id="resultsTitle" class="text-xl font-extrabold text-stone-900">Trending US Personalized Picks</h3>
+            <p id="resultsSubtitle" class="text-xs sm:text-sm text-stone-500">Curated handmade & unique gifts ready to shop on Etsy & Amazon US</p>
+          </div>
+          <span id="matchBadge" class="text-xs font-bold bg-rose-100 text-rose-700 px-3 py-1 rounded-full">6 Curated Matches</span>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingBox" class="hidden glass-card rounded-2xl p-12 text-center">
+          <div class="loader mx-auto mb-4"></div>
+          <p class="font-bold text-stone-800">AI Concierge is analyzing hobbies & US store catalogs...</p>
+          <p class="text-xs text-stone-500 mt-1">Matching custom Etsy artisans & top-rated Amazon US finds</p>
+        </div>
+
+        <!-- Gift Cards Grid -->
+        <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Cards injected dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="bg-white border-t border-stone-200 py-12 mt-8">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <h2 class="text-2xl font-extrabold text-stone-900 mb-2">Why Shoppers Love GiftGenie AI</h2>
+      <p class="text-sm text-stone-500 mb-8">Built to eliminate holiday shopping stress across the United States</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+        <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200/70">
+          <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold mb-3">1</div>
+          <h3 class="font-bold text-stone-900 mb-1">Hyper-Personalized Matching</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">Combines recipient age, relationship dynamics, and niche hobbies instead of generic top-10 lists.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200/70">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold mb-3">2</div>
+          <h3 class="font-bold text-stone-900 mb-1">Handmade & Artisan Focus</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">Prioritizes custom-engraved, monogrammed, and small-business handmade items that feel truly thoughtful.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200/70">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold mb-3">3</div>
+          <h3 class="font-bold text-stone-900 mb-1">Direct US Store Checkout</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">One-click search links take you straight to verified listings on Amazon US and Etsy with fast US shipping.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-stone-900 text-stone-400 py-6 text-center text-xs">
+    <p>© 2026 GiftGenie.ai — AI-Powered Personalized Gifting Concierge. Direct links to Amazon US & Etsy.</p>
+  </footer>
+
+  <!-- Saved Wishlist Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-stone-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+    Saved to your Gift Ideas list!
+  </div>
+
+  <script>
+    // Curated Gift Database + Dynamic AI Rule Generator
+    const defaultGifts = [
+      {
+        title: "Custom Engraved Birth Flower & Name Leather Journal",
+        tag: "Handmade • Etsy Favorite",
+        price: "$34",
+        why: "Combines their birth month flower with custom foil stamping—ideal for thoughtful writers and planners.",
+        query: "personalized birth flower leather journal custom name",
+        badgeColor: "bg-amber-100 text-amber-800"
+      },
+      {
+        title: "Personalized Soundwave Art Print of 'Your Song'",
+        tag: "Sentimental • Custom Print",
+        price: "$42",
+        why: "Turns a wedding song, voice message, or favorite track into framed minimalist wall art.",
+        query: "custom soundwave art print personalized song",
+        badgeColor: "bg-rose-100 text-rose-800"
+      },
+      {
+        title: "Monogrammed Acacia Wood Charcuterie & Cheese Board",
+        tag: "Thanksgiving & Host Pick",
+        price: "$49",
+        why: "Laser-engraved family initial makes holiday hosting unforgettable and doubles as kitchen decor.",
+        query: "personalized monogrammed charcuterie board engraved",
+        badgeColor: "bg-emerald-100 text-emerald-800"
+      },
+      {
+        title: "Custom Pet Portrait Embroidered Crewneck Sweatshirt",
+        tag: "Viral Handmade Gift",
+        price: "$55",
+        why: "Stitched directly from a photo of their dog or cat—cozy, personal, and guaranteed to bring smiles.",
+        query: "custom embroidered pet portrait sweatshirt from photo",
+        badgeColor: "bg-purple-100 text-purple-800"
+      },
+      {
+        title: "Personalized Brass & Walnut Pour-Over Coffee Stand",
+        tag: "Artisan Coffee Lover",
+        price: "$64",
+        why: "Elevates their morning coffee ritual with custom engraved initials on solid American walnut.",
+        query: "personalized walnut pour over coffee maker stand engraved",
+        badgeColor: "bg-amber-100 text-amber-800"
+      },
+      {
+        title: "Custom Star Map of a Special Night (Framed)",
+        tag: "Anniversary & Valentine's",
+        price: "$39",
+        why: "Shows exact constellation alignment from the night you met, got married, or celebrated a milestone.",
+        query: "custom star map night sky print personalized date location",
+        badgeColor: "bg-rose-100 text-rose-800"
+      }
+    ];
+
+    function buildStoreLinks(searchQuery) {
+      const encoded = encodeURIComponent(searchQuery);
+      return {
+        etsy: `https://www.etsy.com/search?q=${encoded}`,
+        amazon: `https://www.amazon.com/s?k=${encoded}`
+      };
+    }
+
+    function renderGifts(gifts) {
+      const grid = document.getElementById('resultsGrid');
+      grid.innerHTML = '';
+
+      gifts.forEach((gift) => {
+        const links = buildStoreLinks(gift.query);
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl p-5 border border-stone-200/90 shadow-sm hover:shadow-md transition flex flex-col justify-between';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${gift.badgeColor || 'bg-rose-100 text-rose-700'}">
+                ${gift.tag}
+              </span>
+              <span class="text-sm font-extrabold text-stone-900">${gift.price}</span>
+            </div>
+            <h4 class="font-bold text-base text-stone-900 leading-snug mb-2">${gift.title}</h4>
+            <p class="text-xs text-stone-600 leading-relaxed mb-4">
+              <span class="font-semibold text-stone-800">Why it fits:</span> ${gift.why}
+            </p>
+          </div>
+          <div class="pt-3 border-t border-stone-100 flex items-center gap-2">
+            <a href="${links.etsy}" target="_blank" rel="noopener noreferrer"
+              class="flex-1 text-center bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 px-3 rounded-xl transition">
+              Shop Etsy ↗
+            </a>
+            <a href="${links.amazon}" target="_blank" rel="noopener noreferrer"
+              class="flex-1 text-center bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold py-2 px-3 rounded-xl transition">
+              Amazon US ↗
+            </a>
+            <button onclick="showToast('${gift.title.replace(/'/g, "\\'")}')" title="Save Idea"
+              class="p-2 rounded-xl border border-stone-200 hover:bg-rose-50 hover:text-rose-600 text-stone-500 transition">
+              ♥
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function generateSmartRecommendations({ relationship, age, occasion, interests, budget, style }) {
+      const cleanInterest = interests.trim() || 'unique lifestyle';
+      const firstInterest = cleanInterest.split(',')[0].trim();
+
+      return [
+        {
+          title: `Custom Engraved ${capitalize(firstInterest)} Keepsake Box & Kit`,
+          tag: `${style} • Top Match`,
+          price: mapBudgetPrice(budget, 0),
+          why: `Tailored specifically for a ${age} ${relationship.toLowerCase()} who loves ${cleanInterest}—personalized with their name for ${occasion}.`,
+          query: `personalized ${firstInterest} gift custom engraved for ${relationship}`,
+          badgeColor: "bg-rose-100 text-rose-800"
+        },
+        {
+          title: `Handmade ${capitalize(firstInterest)} Artisan Gift Set`,
+          tag: `Etsy Small Business Pick`,
+          price: mapBudgetPrice(budget, 1),
+          why: `Crafted by independent US makers with custom gift wrapping included, perfect for ${occasion} gifting.`,
+          query: `handmade ${firstInterest} personalized gift set etsy`,
+          badgeColor: "bg-amber-100 text-amber-800"
+        },
+        {
+          title: `Monogrammed Luxury ${capitalize(firstInterest)} Companion Organizer`,
+          tag: `Practical & Custom`,
+          price: mapBudgetPrice(budget, 2),
+          why: `Combines everyday utility for ${firstInterest} enthusiasts with custom leather monogramming.`,
+          query: `monogrammed ${firstInterest} leather accessory personalized gift`,
+          badgeColor: "bg-emerald-100 text-emerald-800"
+        },
+        {
+          title: `Custom Illustrated Portrait: "${relationship} & ${capitalize(firstInterest)}"`,
+          tag: `100% One-of-a-Kind`,
+          price: mapBudgetPrice(budget, 1),
+          why: `A digital-to-framed custom illustration featuring them enjoying ${firstInterest}—guaranteed emotional reaction on ${occasion}.`,
+          query: `custom personalized portrait illustration ${firstInterest} gift`,
+          badgeColor: "bg-purple-100 text-purple-800"
+        },
+        {
+          title: `Personalized Ceramic Mug / Tumbler for ${capitalize(firstInterest)} Lovers`,
+          tag: `Under Budget Favorite`,
+          price: mapBudgetPrice(budget, 0),
+          why: `Features custom typography, inside-joke engraving, and durable insulation built for daily use.`,
+          query: `personalized ${firstInterest} tumbler mug custom name gift`,
+          badgeColor: "bg-sky-100 text-sky-800"
+        },
+        {
+          title: `Curated ${occasion} Deluxe Gift Box (${capitalize(firstInterest)} Edition)`,
+          tag: `Ready-to-Gift Box`,
+          price: mapBudgetPrice(budget, 2),
+          why: `Includes a personalized greeting card, small-batch treats, and custom keepsakes themed around ${cleanInterest}.`,
+          query: `personalized ${occasion} gift box ${firstInterest} custom`,
+          badgeColor: "bg-rose-100 text-rose-800"
+        }
+      ];
+    }
+
+    function mapBudgetPrice(budget, tier) {
+      if (budget.includes('Under $30')) return ['$19', '$24', '$28'][tier];
+      if (budget.includes('$30 - $75')) return ['$36', '$48', '$65'][tier];
+      if (budget.includes('$75 - $150')) return ['$85', '$110', '$135'][tier];
+      return ['$160', '$195', '$240'][tier];
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function addInterest(text) {
+      const input = document.getElementById('interests');
+      if (!input.value.trim()) {
+        input.value = text;
+      } else if (!input.value.toLowerCase().includes(text.toLowerCase())) {
+        input.value = input.value.trim() + ', ' + text;
+      }
+    }
+
+    function setQuickOccasion(occ) {
+      document.getElementById('occasion').value = occ;
+      scrollToFinder();
+    }
+
+    function scrollToFinder() {
+      document.getElementById('finder').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showToast(title) {
+      const toast = document.getElementById('toast');
+      toast.textContent = `♥ Saved: "${title}"`;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2600);
+    }
+
+    document.getElementById('giftForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const relationship = document.getElementById('relationship').value;
+      const age = document.getElementById('age').value;
+      const occasion = document.getElementById('occasion').value;
+      const interests = document.getElementById('interests').value;
+      const budget = document.getElementById('budget').value;
+      const style = document.getElementById('style').value;
+
+      const grid = document.getElementById('resultsGrid');
+      const loading = document.getElementById('loadingBox');
+
+      grid.classList.add('hidden');
+      loading.classList.remove('hidden');
+
+      setTimeout(() => {
+        const customGifts = generateSmartRecommendations({ relationship, age, occasion, interests, budget, style });
+        document.getElementById('resultsTitle').textContent = `${occasion} Gifts for ${relationship} (${age})`;
+        document.getElementById('resultsSubtitle').textContent = `Matched to: ${interests} • Budget: ${budget}`;
+        renderGifts(customGifts);
+        loading.classList.add('hidden');
+        grid.classList.remove('hidden');
+      }, 650);
+    });
+
+    // Initial load
+    renderGifts(defaultGifts);
+  </script>
+</body>
+</html>
